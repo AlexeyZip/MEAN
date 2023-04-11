@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'mean';
+  public storedPosts = [];
+
+  public onPostAdded(post: any): void {
+    this.storedPosts.push(post);
+  }
 }
