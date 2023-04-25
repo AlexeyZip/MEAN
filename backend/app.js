@@ -1,10 +1,19 @@
-const express = require('express');
+const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 // 0tYjKNWNJsp8dghL
 // 31.202.50.66
 const app = express();
+const Post = require('./models/post');
 
+mongoose.connect("mongodb+srv://alexZO:0tYjKNWNJsp8dghL@cluster0.ro8r3vz.mongodb.net/mean?retryWrites=true&w=majority")
+    .then(() => {
+        console.log("Connection to the database successful");
+    })
+    .catch(() => {
+        console.log("Connection to the database failed");
+    })
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -16,39 +25,23 @@ app.use((req, res, next) => {
 })
 
 app.post("/api/posts", (req, res, next) => {
-    const post = req.body;
-    console.log(post);
+    const post = new Post({
+        title: req.body.title,
+        content: req.body.content
+    });
+    post.save();
     res.status(201).json({
         message: 'Post added successfully'
     });
 });
 
 app.get('/api/posts',(req, res) => {
-    const posts = [
-        {
-            id: '1',
-            title: 'Title 1',
-            content: 'Post number 1'
-        },
-        {
-            id: '2',
-            title: 'Title 2',
-            content: 'Post number 2'
-        },
-        {
-            id: '3',
-            title: 'Title 3',
-            content: 'Post number 3'
-        },
-        {
-            id: '4',
-            title: 'Title 4',
-            content: 'Post number 4'
-        },
-    ]
-    res.status(200).json({
-        message: 'Posts fetched succesfully!',
-        posts: posts
+    Post.find()
+    .then(documents => {
+        res.status(200).json({
+            message: 'Posts fetched succesfully!',
+            posts: documents
+        });
     });
 });
 
