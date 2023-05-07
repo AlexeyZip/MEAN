@@ -28,6 +28,9 @@ export class PostCreateComponent implements OnInit {
             }),
             content: new FormControl(null, {
                 validators: [Validators.required]
+            }),
+            image: new FormControl(null, {
+                validators: [Validators.required]
             })
         });
         this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -65,5 +68,11 @@ export class PostCreateComponent implements OnInit {
         } else {
             this.postsService.updatePost(this.postId ,this.form.value.title, this.form.value.content)
         }
+    }
+
+    public onImagePicked(event: Event): void {
+        const file = (event.target as HTMLInputElement).files[0];
+        this.form.patchValue({image: file});
+        this.form.get('image').updateValueAndValidity();
     }
 }
