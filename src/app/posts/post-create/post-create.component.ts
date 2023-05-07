@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { postMode } from "../post.interface";
@@ -15,12 +15,21 @@ export class PostCreateComponent implements OnInit {
     public enteredContent: string = '';
     public selectedPost: Post;
     public isLoading: boolean = false;
+    public form: FormGroup;
     private mode: postMode;
     private postId: string;
 
     constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
     public ngOnInit(): void {
+        this.form = new FormGroup({
+            title: new FormControl(null, {
+                validators: [Validators.required, Validators.minLength(3)]
+            }),
+            content: new FormControl(null, {
+                validators: [Validators.required]
+            })
+        });
         this.route.paramMap.subscribe((paramMap: ParamMap) => {
             if (paramMap.has('postId')) {
                 this.mode = postMode.editMode;
@@ -28,7 +37,15 @@ export class PostCreateComponent implements OnInit {
                 this.isLoading = true;
                 this.postsService.getPostById(this.postId).subscribe(postData => {
                     this.isLoading = false;
-                    this.selectedPost = {id: postData.id, title: postData.title, content: postData.content};
+                    this.selectedPost = {
+                            id: postData.id,
+                            title: postData.title,
+                            content: postData.content
+                        };
+                    this.form.setValue({
+                        title: this.selectedPost.title,
+                        content: this.selectedPost.content
+                    })
                 });
             } else {
                 this.mode = postMode.createMode;
@@ -37,16 +54,16 @@ export class PostCreateComponent implements OnInit {
         })
     }
 
-    public onSavePost(form: NgForm): void {
-        if (form.invalid) {
+    public onSavePost(): void {
+        if (this.form.invalid) {
             return
         };
         this.isLoading = true;
         if (this.mode === postMode.createMode) {
-            this.postsService.addPost(form.value.title, form.value.content); 
-            form.resetForm();
+            this.postsService.addPost(this.form.value.title, this.form.value.content); 
+            this.form.reset();
         } else {
-            this.postsService.updatePost(this.postId ,form.value.title, form.value.content)
+            this.postsService.updatePost(this.postId ,this.form.value.title, this.form.value.content)
         }
     }
 }
