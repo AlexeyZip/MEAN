@@ -12,18 +12,18 @@ import { mimeType } from "./mime-type.validator";
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
-    public enteredTitle: string = '';
-    public enteredContent: string = '';
-    public selectedPost: Post;
-    public isLoading: boolean = false;
-    public form: FormGroup;
-    public imagePreview: string;
+    enteredTitle: string = '';
+    enteredContent: string = '';
+    selectedPost: Post;
+    isLoading: boolean = false;
+    form: FormGroup;
+    imagePreview: string;
     private mode: postMode;
     private postId: string;
 
     constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.form = new FormGroup({
             title: new FormControl(null, {
                 validators: [Validators.required, Validators.minLength(3)]
@@ -62,7 +62,7 @@ export class PostCreateComponent implements OnInit {
         })
     }
 
-    public onSavePost(): void {
+    onSavePost(): void {
         // if (this.form.invalid) {
         //     return
         // };
@@ -84,7 +84,7 @@ export class PostCreateComponent implements OnInit {
         }
     }
 
-    public onImagePicked(event: Event): void {
+    onImagePicked(event: Event): void {
         const file = (event.target as HTMLInputElement).files[0];
         this.form.patchValue({image: file});
         this.form.get('image').updateValueAndValidity();
