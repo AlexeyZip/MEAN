@@ -22,7 +22,8 @@ export class PostsService {
                             title: post.title,
                             content: post.content,
                             id: post._id,
-                            imagePath: post.imagePath
+                            imagePath: post.imagePath,
+                            author: post.author
                         }
                     }),
                     maxPosts: postData.maxPosts
@@ -42,7 +43,7 @@ export class PostsService {
     }
 
     getPostById(postId: string) {
-        return this.http.get<{ _id: string; title: string; content: string, imagePath: string }>(
+        return this.http.get<{ _id: string; title: string; content: string, imagePath: string, author: string }>(
           'http://localhost:3000/api/posts/' + postId
         );
     }
@@ -72,7 +73,8 @@ export class PostsService {
                 id: postId,
                 title: title,
                 content: content,
-                imagePath: image
+                imagePath: image,
+                author: null
             };
         }
         this.http.put('http://localhost:3000/api/posts/' + postId, postData)
