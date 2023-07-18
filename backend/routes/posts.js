@@ -29,7 +29,8 @@ router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: url + "/images/" + req.file.filename
+        imagePath: url + "/images/" + req.file.filename,
+        author: req.userData.userId
     });
     post.save().then(createdPost => {
         console.log(createdPost);
@@ -39,12 +40,6 @@ router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res
                 ...createdPost,
                 id: createdPost._id
             }
-            // post: {
-            //     id: createdPost._id,
-            //     title: createdPost.title,
-            //     content: createdPost.content,
-            //     imagePath: createdPost.imagePath
-            // }
         });
     });
 });
@@ -91,20 +86,35 @@ router.put("/:id", checkAuth, multer({storage: storage}).single("image"), (req, 
         _id: req.body.id,
         title: req.body.title,
         content: req.body.content,
-        imagePath: imagePath
+        imagePath: imagePath,
+        author: req.userData.userId
     });
-    Post.updateOne({_id: req.params.id}, updatedPost).then(result => {
-        res.status(200).json({
-            message: "Update successful!"
-        })
+    Post.updateOne({_id: req.params.id, author: req.userData.userId}, updatedPost).then(result => {
+        if (result.modifiedCount > 0) {
+            res.status(200).json({
+                message: "Update successful!"
+            })
+        } else {
+            res.status(401).json({
+                message: "Not authorized!"
+            })
+        }
+        
     });
 });
 
 router.delete('/:id', checkAuth, (req, res, next) => {
-    Post.deleteOne({_id: req.params.id}).then((result) => {
-        res.status(200).json({
-            message: 'Post deleted'
-        });
+    Post.deleteOne({_id: req.params.id, author: req.userData.userId}).then((result) => {
+        if (result.deletedCount > 0) {
+            res.status(200).json({
+                message: 'Post deleted'
+            });
+        } else {
+            res.status(401).json({
+                message: 'Not authorized!'
+            });
+        }
+        
     })
     
 });
