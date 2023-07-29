@@ -9,7 +9,7 @@ const authRoutes = require("./routes/auth");
 const app = express();
 const Post = require('./models/post');
 
-mongoose.connect("mongodb+srv://alexZO:0tYjKNWNJsp8dghL@cluster0.ro8r3vz.mongodb.net/mean?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://alexZO:" + process.env.MONGO_ATLAS_PASSWORD + "@cluster0.ro8r3vz.mongodb.net/mean?retryWrites=true&w=majority")
     .then(() => {
         console.log("Connection to the database successful");
     })
