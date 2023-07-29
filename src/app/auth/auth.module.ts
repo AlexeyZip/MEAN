@@ -4,7 +4,7 @@ import { SignupComponent } from "./signup/signup.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularMaterialModule } from "../angular-material.module";
-import { AppRoutingModule } from "../app-routing.module";
+import { AuthRoutingModule } from "./auth-routing.module";
 
 @NgModule({
     declarations: [
@@ -13,10 +13,10 @@ import { AppRoutingModule } from "../app-routing.module";
     ],
     imports: [
         CommonModule,
-        AppRoutingModule,
         ReactiveFormsModule,
         AngularMaterialModule,
-        FormsModule
+        FormsModule,
+        AuthRoutingModule
     ]
 })
 export class AuthModule {
