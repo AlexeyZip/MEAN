@@ -16,6 +16,3 @@ router.put("/:id", checkAuth, extractFile, PostsController.updatePost);
 router.delete('/:id', checkAuth, PostsController.deletePost);
 
 module.exports = router;
-
-
-// Also, for lecture 135, in the updateOne method, you should use result.matchedCount instead of result.n.
